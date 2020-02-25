@@ -1,8 +1,9 @@
 import { Component, TemplateRef, OnInit } from "@angular/core";
 import { faPlus, faEllipsisH } from "@fortawesome/free-solid-svg-icons";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
-import { TodoListsClient, TodoItemsClient } from "../services/data.service";
 import {
+  TodoListsClient,
+  TodoItemsClient,
   TodoListDto,
   TodoItemDto,
   PriorityLevelDto,
@@ -10,7 +11,7 @@ import {
   UpdateTodoListCommand,
   CreateTodoItemCommand,
   UpdateTodoItemCommand
-} from "../shared/models";
+} from "../services/ca-workshop-api.service";
 
 @Component({
   selector: "app-todo-component",

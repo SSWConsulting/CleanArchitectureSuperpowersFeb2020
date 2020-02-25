@@ -26,7 +26,7 @@ namespace CaWorkshop.WebUI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecast> GetABC()
         {
             var rng = new Random();
             return Enumerable.Range(1, 10).Select(index => new WeatherForecast

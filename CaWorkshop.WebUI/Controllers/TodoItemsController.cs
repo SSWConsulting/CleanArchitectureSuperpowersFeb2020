@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace CaWorkshop.WebUI.Controllers
 {
@@ -45,6 +46,7 @@ namespace CaWorkshop.WebUI.Controllers
 
         // DELETE: api/TodoItems/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteTodoItem(long id)
         {
             await _mediator.Send(new DeleteTodoItemCommand { Id = id });
