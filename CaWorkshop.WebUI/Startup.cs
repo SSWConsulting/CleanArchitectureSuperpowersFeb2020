@@ -1,14 +1,10 @@
-using Microsoft.AspNetCore.Authentication;
+using CaWorkshop.Application;
+using CaWorkshop.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using CaWorkshop.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using CaWorkshop.Infrastructure.Identity;
-using CaWorkshop.Application;
-using CaWorkshop.Infrastructure;
 
 namespace CaWorkshop.WebUI
 {
@@ -26,7 +22,9 @@ namespace CaWorkshop.WebUI
         {
             services.AddInfrastructure(Configuration);
             services.AddApplication(Configuration);
+
             services.AddControllersWithViews();
+
             services.AddRazorPages();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

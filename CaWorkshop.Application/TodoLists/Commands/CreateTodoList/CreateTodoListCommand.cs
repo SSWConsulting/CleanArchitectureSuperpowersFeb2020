@@ -1,6 +1,7 @@
 ﻿using CaWorkshop.Application.Common.Interfaces;
 using CaWorkshop.Domain.Entities;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace CaWorkshop.Application.TodoLists.Commands.CreateTodoList
     {
         public string Title { get; set; }
     }
+
 
     public class CreateTodoListCommandHandler
         : IRequestHandler<CreateTodoListCommand, int>
