@@ -12,8 +12,7 @@ namespace CaWorkshop.Domain.Entities
 
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(280)]
+        
         public string Title { get; set; }
 
         public string Colour { get; set; }
