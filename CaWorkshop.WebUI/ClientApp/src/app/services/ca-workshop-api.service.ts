@@ -477,7 +477,7 @@ export class TodoListsClient implements ITodoListsClient {
 }
 
 export interface IWeatherForecastClient {
-    getABC(): Observable<WeatherForecast[]>;
+    get(): Observable<WeatherForecast[]>;
 }
 
 @Injectable({
@@ -493,7 +493,7 @@ export class WeatherForecastClient implements IWeatherForecastClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getABC(): Observable<WeatherForecast[]> {
+    get(): Observable<WeatherForecast[]> {
         let url_ = this.baseUrl + "/WeatherForecast";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -506,11 +506,11 @@ export class WeatherForecastClient implements IWeatherForecastClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetABC(response_);
+            return this.processGet(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetABC(<any>response_);
+                    return this.processGet(<any>response_);
                 } catch (e) {
                     return <Observable<WeatherForecast[]>><any>_observableThrow(e);
                 }
@@ -519,7 +519,7 @@ export class WeatherForecastClient implements IWeatherForecastClient {
         }));
     }
 
-    protected processGetABC(response: HttpResponseBase): Observable<WeatherForecast[]> {
+    protected processGet(response: HttpResponseBase): Observable<WeatherForecast[]> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
