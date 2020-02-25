@@ -1,27 +1,28 @@
-import { Component, TemplateRef, OnInit } from '@angular/core';
-import { faPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { TodoList, TodoItem, PriorityLevel } from '../shared/models';
-import { TodoListsClient, TodoItemsClient } from '../services/data.service';
+import { Component, TemplateRef, OnInit } from "@angular/core";
+import { faPlus, faEllipsisH } from "@fortawesome/free-solid-svg-icons";
+import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
+import { TodoListsClient, TodoItemsClient } from "../services/data.service";
+import {
+  TodoListDto,
+  TodoItemDto,
+  PriorityLevelDto,
+  CreateTodoListCommand,
+  UpdateTodoListCommand,
+  CreateTodoItemCommand,
+  UpdateTodoItemCommand
+} from "../shared/models";
 
 @Component({
-  selector: 'app-todo-component',
-  templateUrl: './todo.component.html',
-  styleUrls: ['./todo.component.css']
+  selector: "app-todo-component",
+  templateUrl: "./todo.component.html",
+  styleUrls: ["./todo.component.css"]
 })
 export class TodoComponent implements OnInit {
   debug = false;
-  lists: TodoList[];
-
-  priorityLevels: PriorityLevel[] = [
-    { value: 0, name: 'None' },
-    { value: 1, name: 'Low' },
-    { value: 2, name: 'Medium' },
-    { value: 3, name: 'High' }
-  ];
-
-  selectedList: TodoList;
-  selectedItem: TodoItem;
+  lists: TodoListDto[];
+  priorityLevels: PriorityLevelDto[];
+  selectedList: TodoListDto;
+  selectedItem: TodoItemDto;
   newListEditor: any = {};
   listOptionsEditor: any = {};
   itemDetailsEditor: any = {};
@@ -41,7 +42,8 @@ export class TodoComponent implements OnInit {
   ngOnInit(): void {
     this.listsClient.getTodoLists().subscribe(
       result => {
-        this.lists = result;
+        this.lists = result.lists;
+        this.priorityLevels = result.priorityLevels;
         if (this.lists.length) {
           this.selectedList = this.lists[0];
         }
@@ -51,13 +53,13 @@ export class TodoComponent implements OnInit {
   }
 
   // Lists
-  remainingItems(list: TodoList): number {
+  remainingItems(list: TodoListDto): number {
     return list.items.filter(t => !t.done).length;
   }
 
   showNewListModal(template: TemplateRef<any>): void {
     this.newListModalRef = this.modalService.show(template);
-    setTimeout(() => document.getElementById('title').focus(), 250);
+    setTimeout(() => document.getElementById("title").focus(), 250);
   }
 
   newListCancelled(): void {
@@ -70,11 +72,11 @@ export class TodoComponent implements OnInit {
       id: 0,
       title: this.newListEditor.title,
       items: []
-    } as TodoList;
+    } as TodoListDto;
 
     this.listsClient.postTodoList(list).subscribe(
       result => {
-        list.id = result.id;
+        list.id = result;
         this.lists.push(list);
         this.selectedList = list;
         this.newListModalRef.hide();
@@ -87,7 +89,7 @@ export class TodoComponent implements OnInit {
           this.newListEditor.error = errors.Title[0];
         }
 
-        setTimeout(() => document.getElementById('title').focus(), 250);
+        setTimeout(() => document.getElementById("title").focus(), 250);
       }
     );
   }
@@ -102,7 +104,7 @@ export class TodoComponent implements OnInit {
   }
 
   updateListOptions() {
-    const list = this.listOptionsEditor as TodoList;
+    const list = this.listOptionsEditor as UpdateTodoListCommand;
     this.listsClient.putTodoList(this.selectedList.id, list).subscribe(
       () => {
         (this.selectedList.title = this.listOptionsEditor.title),
@@ -130,7 +132,7 @@ export class TodoComponent implements OnInit {
   }
 
   // Items
-  showItemDetailsModal(template: TemplateRef<any>, item: TodoItem): void {
+  showItemDetailsModal(template: TemplateRef<any>, item: TodoItemDto): void {
     this.selectedItem = item;
     this.itemDetailsEditor = {
       ...this.selectedItem
@@ -140,7 +142,7 @@ export class TodoComponent implements OnInit {
   }
 
   updateItemDetails(): void {
-    const item = this.itemDetailsEditor as TodoItem;
+    const item = this.itemDetailsEditor as UpdateTodoItemCommand;
     this.itemsClient.putTodoItem(this.selectedItem.id, item).subscribe(
       () => {
         if (this.selectedItem.listId !== this.itemDetailsEditor.listId) {
@@ -168,21 +170,21 @@ export class TodoComponent implements OnInit {
       id: 0,
       listId: this.selectedList.id,
       priority: this.priorityLevels[0].value,
-      title: '',
+      title: "",
       done: false
-    } as TodoItem;
+    } as TodoItemDto;
 
     this.selectedList.items.push(item);
     const index = this.selectedList.items.length - 1;
-    this.editItem(item, 'itemTitle' + index);
+    this.editItem(item, "itemTitle" + index);
   }
 
-  editItem(item: TodoItem, inputId: string): void {
+  editItem(item: TodoItemDto, inputId: string): void {
     this.selectedItem = item;
     setTimeout(() => document.getElementById(inputId).focus(), 100);
   }
 
-  updateItem(item: TodoItem, pressedEnter: boolean = false): void {
+  updateItem(item: TodoItemDto, pressedEnter: boolean = false): void {
     const isNewItem = item.id === 0;
 
     if (!item.title.trim()) {
@@ -192,16 +194,19 @@ export class TodoComponent implements OnInit {
 
     if (item.id === 0) {
       this.itemsClient
-        .postTodoItem({ ...item, listId: this.selectedList.id })
+        .postTodoItem({
+          ...item,
+          listId: this.selectedList.id
+        } as CreateTodoItemCommand)
         .subscribe(
           result => {
-            item.id = result.id;
+            item.id = result;
           },
           error => console.error(error)
         );
     } else {
       this.itemsClient.putTodoItem(item.id, item).subscribe(
-        () => console.log('Update succeeded.'),
+        () => console.log("Update succeeded."),
         error => console.error(error)
       );
     }
@@ -209,11 +214,11 @@ export class TodoComponent implements OnInit {
     this.selectedItem = null;
 
     if (isNewItem && pressedEnter) {
-      this.addItem();
+      setTimeout(() => this.addItem(), 250);
     }
   }
 
-  deleteItem(item: TodoItem) {
+  deleteItem(item: TodoItemDto) {
     if (this.itemDetailsModalRef) {
       this.itemDetailsModalRef.hide();
     }

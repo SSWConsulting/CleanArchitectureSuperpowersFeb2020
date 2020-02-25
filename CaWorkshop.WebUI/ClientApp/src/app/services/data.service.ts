@@ -1,76 +1,86 @@
-import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
-import { TodoItem, TodoList } from '../shared/models';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable, Inject, Optional, InjectionToken } from "@angular/core";
+import {
+  TodosVm,
+  CreateTodoListCommand,
+  UpdateTodoListCommand,
+  CreateTodoItemCommand,
+  UpdateTodoItemCommand
+} from "../shared/models";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
 
-export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
+export const API_BASE_URL = new InjectionToken<string>("API_BASE_URL");
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class TodoListsClient {
   private http: HttpClient;
   private baseUrl: string;
 
-  constructor(@Inject(HttpClient) http: HttpClient,
-    @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+  constructor(
+    @Inject(HttpClient) http: HttpClient,
+    @Optional() @Inject(API_BASE_URL) baseUrl?: string
+  ) {
     this.http = http;
-    this.baseUrl = baseUrl ? `${baseUrl}/api/TodoLists` : '';
+    this.baseUrl = baseUrl ? `${baseUrl}/api/TodoLists` : "";
   }
 
-  getTodoLists(): Observable<TodoList[]> {
+  getTodoLists(): Observable<TodosVm> {
     const url = this.baseUrl;
 
-    return this.http.get<TodoList[]>(url);
+    return this.http.get<TodosVm>(url);
   }
 
-  postTodoList(list: TodoList): Observable<TodoList> {
+  postTodoList(command: CreateTodoListCommand): Observable<number> {
     const url = this.baseUrl;
 
-    return this.http.post<TodoList>(url, list);
+    return this.http.post<number>(url, command);
   }
 
-  putTodoList(id: number, list: TodoList): Observable<TodoList> {
+  putTodoList(id: number, command: UpdateTodoListCommand): Observable<string> {
     const url = `${this.baseUrl}/${id}`;
 
-    return this.http.put<TodoList>(url, list);
+    return this.http.put<string>(url, command);
   }
 
-  deleteTodoList(id: number): Observable<TodoList> {
+  deleteTodoList(id: number): Observable<string> {
     const url = `${this.baseUrl}/${id}`;
 
-    return this.http.delete<TodoList>(url);
+    return this.http.delete<string>(url);
   }
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class TodoItemsClient {
   private http: HttpClient;
   private baseUrl: string;
 
-  constructor(@Inject(HttpClient) http: HttpClient,
-    @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+  constructor(
+    @Inject(HttpClient) http: HttpClient,
+    @Optional() @Inject(API_BASE_URL) baseUrl?: string
+  ) {
     this.http = http;
-    this.baseUrl = baseUrl ? `${baseUrl}/api/TodoItems` : '';
+    this.baseUrl = baseUrl ? `${baseUrl}/api/TodoItems` : "";
   }
 
-  postTodoItem(item: TodoItem): Observable<TodoItem> {
+  postTodoItem(command: CreateTodoItemCommand): Observable<number> {
     const url = this.baseUrl;
-    console.log(url);
-    return this.http.post<TodoItem>(url, item);
+
+    return this.http.post<number>(url, command);
   }
 
-  putTodoItem(id: number, item: TodoItem): Observable<TodoItem> {
+  putTodoItem(id: number, command: UpdateTodoItemCommand): Observable<string> {
     const url = `${this.baseUrl}/${id}`;
 
-    return this.http.put<TodoItem>(url, item);
+    return this.http.put<string>(url, command);
   }
 
-  deleteTodoItem(id: number): Observable<TodoItem> {
+  deleteTodoItem(id: number): Observable<string> {
     const url = `${this.baseUrl}/${id}`;
 
-    return this.http.delete<TodoItem>(url);
+    return this.http.delete<string>(url);
   }
 }
