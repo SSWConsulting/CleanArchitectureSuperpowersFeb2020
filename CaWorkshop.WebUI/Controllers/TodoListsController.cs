@@ -7,9 +7,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CaWorkshop.WebUI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TodoListsController : ControllerBase
@@ -26,6 +28,7 @@ namespace CaWorkshop.WebUI.Controllers
         public async Task<ActionResult<TodosVm>> GetTodoLists()
         {
             return await _mediator.Send(new GetTodoListsQuery());
+
         }
 
         // POST: api/TodoLists

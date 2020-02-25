@@ -18,6 +18,8 @@ namespace CaWorkshop.Infrastructure
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<IIdentityService, IdentityService>();
+
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
             services.AddDefaultIdentity<ApplicationUser>()
