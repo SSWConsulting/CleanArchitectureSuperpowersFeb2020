@@ -1,5 +1,6 @@
 using CaWorkshop.Application;
 using CaWorkshop.Infrastructure;
+using CleanArchitecture.WebUI.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -53,6 +54,7 @@ namespace CaWorkshop.WebUI
                 app.UseHsts();
             }
 
+            app.UseCustomExceptionHandler();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             if (!env.IsDevelopment())
