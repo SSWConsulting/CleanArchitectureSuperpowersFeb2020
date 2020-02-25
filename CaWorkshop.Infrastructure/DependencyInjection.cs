@@ -1,4 +1,5 @@
-﻿using CaWorkshop.Infrastructure.Identity;
+﻿using CaWorkshop.Application.Common.Interfaces;
+using CaWorkshop.Infrastructure.Identity;
 using CaWorkshop.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ namespace CaWorkshop.Infrastructure
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();

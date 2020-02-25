@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CaWorkshop.Application.TodoLists.Queries.GetTodoLists;
+using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace CaWorkshop.Application
 {
@@ -9,6 +12,7 @@ namespace CaWorkshop.Application
             this IServiceCollection services,
             IConfiguration configuration)
         {
+            services.AddMediatR(Assembly.GetExecutingAssembly());
             return services;
         }
     }
