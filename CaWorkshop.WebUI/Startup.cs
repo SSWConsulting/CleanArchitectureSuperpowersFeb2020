@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
-using CaWorkshop.WebUI.Data;
-using CaWorkshop.WebUI.Models;
+using CaWorkshop.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using CaWorkshop.Infrastructure.Identity;
 
 namespace CaWorkshop.WebUI
 {
