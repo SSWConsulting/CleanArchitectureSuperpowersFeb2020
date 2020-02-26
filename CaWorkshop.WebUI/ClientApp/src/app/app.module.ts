@@ -48,7 +48,7 @@ import { ModalModule } from "ngx-bootstrap/modal";
     ModalModule.forRoot()
   ],
   providers: [
-    // Code omitted for clarity
+    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
     { provide: API_BASE_URL, useValue: environment.apiBaseUrl }
   ],
   bootstrap: [AppComponent]
