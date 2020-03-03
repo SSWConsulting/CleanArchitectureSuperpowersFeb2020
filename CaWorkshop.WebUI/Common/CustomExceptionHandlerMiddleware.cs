@@ -1,9 +1,9 @@
 ﻿using CaWorkshop.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CleanArchitecture.WebUI.Common
@@ -40,7 +40,7 @@ namespace CleanArchitecture.WebUI.Common
             {
                 case ValidationException validationException:
                     code = HttpStatusCode.BadRequest;
-                    result = JsonConvert.SerializeObject(
+                    result = JsonSerializer.Serialize(
                         validationException.Errors);
                     break;
                 case NotFoundException _:
@@ -53,7 +53,7 @@ namespace CleanArchitecture.WebUI.Common
 
             if (string.IsNullOrEmpty(result))
             {
-                result = JsonConvert.SerializeObject(
+                result = JsonSerializer.Serialize(
                     new { error = exception.Message });
             }
 
